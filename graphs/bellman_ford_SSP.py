@@ -26,4 +26,4 @@ sample_graph = {
 }
 
 if __name__ == "__main__":
-    print(bellman_ford(sample_graph, 'B'))
+    print(bellman_ford(sample_graph, 'A'))

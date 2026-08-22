@@ -1,45 +1,60 @@
-class maxheap:
+# max heap implementation
+
+class MaxHeap:
+    """Array-based max heap where every parent is at least its children."""
+
     def __init__(self):
+        """Create an empty max heap."""
         self.A = []
 
-    def max_heapify(self, v):
-        left_child = (2*v) + 1
-        right_child = (2*v) + 2
-        maximum = v
-
-        if left_child < len(self.A) and self.A[left_child] > self.A[maximum]:
-            maximum = left_child
-        if right_child < len(self.A) and self.A[right_child] > self.A[maximum]:
-            maximum = right_child
-        if maximum != v:
-            self.A[v], self.A[maximum] = self.A[maximum], self.A[v]
-            self.max_heapify(maximum)
-
-    def build_max_heap(self, L):
+    def build_maxHeap(self, L: list) -> None:
+        """Build a max heap from the elements in ``L`` in O(n) time."""
         self.A = []
-        for vertex in L:
-            self.A.append(vertex)
+        for element in L:
+            self.A.append(element)
 
-        n = int((len(self.A)//2)-1)
-        for k in range(n-1, -1, -1):
-            self.max_heapify(k)
+        median = (len(self.A)//2)-1
+        for i in range(median, -1, -1):
+            self.max_heapify(i)
 
-    def del_max(self):
-        vertex = None
-        if len(self.A):
-            self.A[0], self.A[len(self.A)-1] = self.A[len(self.A)-1], self.A[0]
-            vertex = self.A.pop()
+    def max_heapify(self, i):
+        """Restore max-heap order below index ``i`` in O(log n) time."""
+        left = i*2 + 1
+        right = i*2 + 2
+        maximum = i
+        if left < len(self.A) and self.A[left] > self.A[maximum]:
+            maximum = left
+        if right < len(self.A) and self.A[right] > self.A[maximum]:
+            maximum = right
+        if maximum != i:
+            self.A[maximum], self.A[i] = self.A[i], self.A[maximum]
+            return self.max_heapify(maximum)
+
+    def delete_max(self):
+        """Remove and return the largest element, or ``None`` if empty."""
+        result = None
+        if self.A != []:
+            self.A[0], self.A[-1] = self.A[-1], self.A[0]
+            result = self.A.pop()
             self.max_heapify(0)
-        return vertex
-# in case of insert v stands for the actual vertex and not the index of the vertex
+        return result
 
-    def insert(self, v):
-        self.A.append(v)
+    def insert(self, element):
+        """Add ``element`` and restore heap order in O(log n) time."""
+        self.A.append(element)
         index = len(self.A)-1
         while index > 0:
             parent = (index-1)//2
-            if self.A[parent] < self.A[index]:
-                self.A[parent], self.A[index] = self.A[index], self.A[parent]
+            if self.A[index] > self.A[parent]:
+                self.A[index], self.A[parent] = self.A[parent], self.A[index]
                 index = parent
             else:
                 break
+
+    def __str__(self):
+        return str(self.A)
+
+
+heap = MaxHeap()
+heap.build_maxHeap([4, 2, 56, 34, 788, 64, 1])
+print(heap)
